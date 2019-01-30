@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="65dp"
+    android:layout_height="100dp">
+
+    <TextView
+        android:id="@+id/threeHoursDate"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textSize="12sp"
+        android:layout_marginTop="8dp"/>
+
+    <ImageView
+        android:id="@+id/threeHoursIcon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:layout_below="@+id/threeHoursDate"
+        android:layout_above="@+id/threeHoursTemp"/>
+
+    <TextView
+        android:id="@+id/threeHoursTemp"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"/>
+
+</RelativeLayout>

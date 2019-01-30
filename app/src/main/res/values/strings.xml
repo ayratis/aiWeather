@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">aiWeather</string>
+    <string name="today">Today</string>
+    <string name="sunrise">sunrise</string>
+    <string name="sunset">sunset</string>
+    <string name="pressure">Pressure</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind_speed">Wind speed</string>
+    <string name="clouds">Clouds</string>
+</resources>

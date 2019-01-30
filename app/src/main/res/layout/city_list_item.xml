@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_bot_line"
+    android:layout_height="100dp">
+
+    <TextView
+        android:id="@+id/cityItemName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:maxLines="1"
+        android:layout_toLeftOf="@+id/cityItemIcon"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:textSize="20sp"/>
+
+    <ImageView
+        android:id="@+id/cityItemIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:layout_toLeftOf="@+id/cityItemTemp"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/cityItemTemp"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_toLeftOf="@+id/cityItemDeleteButton"
+        android:layout_centerVertical="true" />
+
+
+    <Button
+        android:id="@+id/cityItemDeleteButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/bt_delete"
+        android:backgroundTint="@color/default_text"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+
+
+
+
+</RelativeLayout>

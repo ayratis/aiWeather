@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.MainActivity">
+
+    <TextView
+        android:id="@+id/mainCityNameAndTemp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        />
+
+    <ImageView
+        android:id="@+id/mainIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="4dp"
+        android:layout_below="@+id/mainCityNameAndTemp"
+        android:layout_toLeftOf="@+id/mainWeather" />
+
+    <TextView
+        android:id="@+id/mainWeather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainCityNameAndTemp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:textSize="16sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mainThreeHoursForecast"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/mainWeather"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_top_bot_lines"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <LinearLayout
+        android:id="@+id/mainDayOne"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_below="@+id/mainThreeHoursForecast"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/mainForecastNameDayOne"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/mainForecastIconDayOne"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:scaleType="fitStart" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMinDayOne"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMaxDayOne"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainDayTwo"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_below="@+id/mainDayOne"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/mainForecastNameDayTwo"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/mainForecastIconDayTwo"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:scaleType="fitStart" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMinDayTwo"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMaxDayTwo"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainDayThree"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_below="@+id/mainDayTwo"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/mainForecastNameDayThree"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/mainForecastIconDayThree"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:scaleType="fitStart" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMinDayThree"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMaxDayThree"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainDayFour"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_below="@+id/mainDayThree"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/mainForecastNameDayFour"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/mainForecastIconDayFour"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:scaleType="fitStart" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMinDayFour"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMaxDayFour"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainDayFive"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_below="@+id/mainDayFour"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/mainForecastNameDayFive"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/mainForecastIconDayFive"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:scaleType="fitStart" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMinDayFive"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/mainForecastTempMaxDayFive"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/mainDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainDayFive"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:maxLines="3"
+        android:background="@drawable/bg_top_line"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/mainPressure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainDescription"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/mainHumidity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainPressure"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/mainWind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainHumidity"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/mainClouds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainWind"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:textSize="16sp" />
+    <Button
+        android:id="@+id/mainGoToCityListButton"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bt_city_list"
+        android:backgroundTint="@color/default_text"
+        android:layout_margin="8dp"
+        android:maxLines="1"
+        android:textSize="16sp" />
+
+
+</RelativeLayout>
