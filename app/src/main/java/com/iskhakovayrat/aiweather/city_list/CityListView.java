@@ -12,5 +12,9 @@ public interface CityListView {
 
     void deleteItem(int cityId);
 
-    void showToast(String toastText);
+    void showToastWrongCity();
+
+    void showToastAlreadyOn();
+
+    void showToastTooMuch();
 }

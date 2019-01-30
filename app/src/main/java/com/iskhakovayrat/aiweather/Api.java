@@ -5,7 +5,6 @@ import com.iskhakovayrat.aiweather.model.GroupWeatherResponse;
 import com.iskhakovayrat.aiweather.model.ThreeHoursForecastResponse;
 
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

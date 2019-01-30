@@ -1,4 +1,4 @@
-package com.iskhakovayrat.aiweather;
+package com.iskhakovayrat.aiweather.city_list;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.iskhakovayrat.aiweather.R;
+
 public class CityDialogFragment extends DialogFragment {
 
     public interface ChooseCityDialogListener{
-        public void onDialogPositiveClick(DialogFragment dialog, String cityName);
+        void onDialogPositiveClick(DialogFragment dialog, String cityName);
     }
 
     ChooseCityDialogListener listener;
@@ -22,11 +24,8 @@ public class CityDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
+        if(getActivity() instanceof ChooseCityDialogListener) {
             listener = (ChooseCityDialogListener) getActivity();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString()
-                    + " must implement NoticeDialogListener");
         }
     }
 
@@ -38,10 +37,8 @@ public class CityDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_city, null);
         EditText editText = view.findViewById(R.id.dialogCityName);
         builder.setView(view)
-                .setPositiveButton("OK", (dialogInterface, i) -> {
-                    listener.onDialogPositiveClick(CityDialogFragment.this,
-                            editText.getText().toString());
-                })
+                .setPositiveButton("OK", (dialogInterface, i) ->
+                        listener.onDialogPositiveClick(CityDialogFragment.this, editText.getText().toString()))
                 .setNegativeButton("Cancel", (dialogInterface, i) -> {
 
                 });

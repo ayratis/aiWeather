@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.iskhakovayrat.aiweather.CityDialogFragment;
 import com.iskhakovayrat.aiweather.R;
 import com.iskhakovayrat.aiweather.data.AppDatabase;
 import com.iskhakovayrat.aiweather.model.CurrentWeatherResponse;
@@ -48,7 +47,6 @@ public class CityListActivity extends AppCompatActivity
             DialogFragment newFragment = new CityDialogFragment();
             newFragment.show(getSupportFragmentManager(), "choose_city");
         });
-
     }
 
     @Override
@@ -84,10 +82,19 @@ public class CityListActivity extends AppCompatActivity
     }
 
     @Override
-    public void showToast(String toastText) {
-        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+    public void showToastWrongCity() {
+        Toast.makeText(this, getString(R.string.wrong_city_name), Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void showToastAlreadyOn() {
+        Toast.makeText(this, getString(R.string.already_on_list), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showToastTooMuch() {
+        Toast.makeText(this, getString(R.string.too_much_cities), Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, String cityName) {

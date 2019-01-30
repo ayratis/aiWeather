@@ -7,10 +7,6 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class CityListPresenter {
 
-    private final String TOAST_WRONG = "Wrong city name";
-    private final String TOAST_ALREADY = "Already on the list.";
-    private final String TOAST_TOO_MUCH = "You can't add more than 20 cities.";
-
     private CityListView view;
     private CityListModel model;
 
@@ -44,14 +40,14 @@ public class CityListPresenter {
         disposables
                 .add(model.loadCurrentWeatherInfo(cityName)
                         .subscribe(this::addNewCity,
-                                error -> view.showToast(TOAST_WRONG)));
+                                error -> view.showToastWrongCity()));
     }
 
     private void addNewCity(CurrentWeatherResponse currentWeatherResponse) {
         if (model.isInDb(currentWeatherResponse.getId())) {
-            view.showToast(TOAST_ALREADY);
+            view.showToastAlreadyOn();
         } else if (model.getDbItemcount() >= 20) {
-            view.showToast(TOAST_TOO_MUCH);
+            view.showToastTooMuch();
         } else {
             model.insertInDb(currentWeatherResponse.getId(),
                     currentWeatherResponse.getName());

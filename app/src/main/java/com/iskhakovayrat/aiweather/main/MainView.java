@@ -1,6 +1,5 @@
 package com.iskhakovayrat.aiweather.main;
 
-import com.iskhakovayrat.aiweather.model.CurrentWeatherResponse;
 import com.iskhakovayrat.aiweather.model.ThreeHoursForecastResponse;
 
 public interface MainView {
