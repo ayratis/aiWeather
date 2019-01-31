@@ -1,12 +1,15 @@
 package com.iskhakovayrat.aiweather.main;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
 import com.iskhakovayrat.aiweather.ConstantInterface;
 import com.iskhakovayrat.aiweather.R;
+import com.iskhakovayrat.aiweather.data.AppDatabase;
 import com.iskhakovayrat.aiweather.model.CurrentWeatherResponse;
-import com.iskhakovayrat.aiweather.model.ThreeHoursForecastResponse;
 import com.iskhakovayrat.aiweather.model.DailyForecastParams;
+import com.iskhakovayrat.aiweather.model.ThreeHoursForecastResponse;
 import com.iskhakovayrat.aiweather.utils.DateConverter;
 import com.iskhakovayrat.aiweather.utils.TempConverter;
 
@@ -16,42 +19,63 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class MainPresenter {
 
+    private int cityId;
+
     private MainModel model;
     private MainView view;
     private Context context;
 
     private CompositeDisposable disposables;
 
-    public MainPresenter(Context context) {
-        model = new MainModel();
+    public MainPresenter(Context context, AppDatabase db, Gson gson, SharedPreferences prefs) {
+        model = new MainModel(db, gson, prefs);
         this.context = context;
         disposables = new CompositeDisposable();
     }
 
-    public void attach(MainView view, int cityId){
+    public void attach(MainView view) {
         this.view = view;
+        cityId = model.getLastCityId();
+        showCashedWeatherData();
         loadCurrentWeather(cityId);
         loadThreeHoursForecast(cityId);
     }
 
-    public void detach(){
+    public void detach() {
         view = null;
         disposables.dispose();
     }
 
-    private void loadCurrentWeather(int cityId){
+    private void showCashedWeatherData(){
+        CurrentWeatherResponse currentWeatherResponse = model.getCashedCurrentWeather();
+        if(currentWeatherResponse != null) {
+            showCurrentWeather(currentWeatherResponse);
+        }
+
+        ThreeHoursForecastResponse threeHoursForecastResponse = model.getCashedForecastWeather();
+        if(threeHoursForecastResponse != null){
+            showForecast(threeHoursForecastResponse);
+        } else {
+
+        }
+    }
+
+
+    private void loadCurrentWeather(int cityId) {
         disposables
                 .add(model.loadCurrentWeather(cityId)
-                        .subscribe(this::showCurrentWeather));
+                        .subscribe(this::showCurrentWeather, ignoreError -> {
+                        }));
     }
 
-    private void loadThreeHoursForecast(int cityId){
+    private void loadThreeHoursForecast(int cityId) {
         disposables
                 .add(model.loadThreeHoursForecast(cityId)
-                        .subscribe(this::showForecast));
+                        .subscribe(this::showForecast, ignoreError -> {
+                        }));
     }
 
-    private void showCurrentWeather(CurrentWeatherResponse currentWeather){
+    private void showCurrentWeather(CurrentWeatherResponse currentWeather) {
 
         String cityAndTemp = currentWeather.getName()
                 + " " + TempConverter.convert(currentWeather.getMain().getTemp());
@@ -92,7 +116,7 @@ public class MainPresenter {
         view.showMainClouds(mainClouds);
     }
 
-    private void showForecast(ThreeHoursForecastResponse threeHoursForecastResponse){
+    private void showForecast(ThreeHoursForecastResponse threeHoursForecastResponse) {
 
         view.showThreeHoursForecast(threeHoursForecastResponse);
 
@@ -102,7 +126,7 @@ public class MainPresenter {
         showDailyForecast(dailyForecastParamsList);
     }
 
-    private void showDailyForecast(List<DailyForecastParams> items){
+    private void showDailyForecast(List<DailyForecastParams> items) {
 
         view.showDailyForecastDayOne(DateConverter.getDayOfWeek(items.get(1).getDate()),
                 ConstantInterface.iconUrlPath + items.get(1).getWeatherIcon() + ".png",
@@ -130,7 +154,10 @@ public class MainPresenter {
                 TempConverter.convert(items.get(5).getTempMax()));
     }
 
-    public void changeCity(int cityId){
+    public void changeCity(int cityId) {
+        model.saveLastCityId(cityId);
+        view.clearData();
+        showCashedWeatherData();
         loadCurrentWeather(cityId);
         loadThreeHoursForecast(cityId);
     }

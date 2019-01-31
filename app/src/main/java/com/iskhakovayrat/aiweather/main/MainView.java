@@ -31,4 +31,6 @@ public interface MainView {
 
     void showMainClouds(String clouds);
 
+    void clearData();
+
 }

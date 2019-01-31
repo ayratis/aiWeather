@@ -1,6 +1,7 @@
 package com.iskhakovayrat.aiweather.main;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,9 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.iskhakovayrat.aiweather.ConstantInterface;
 import com.iskhakovayrat.aiweather.R;
 import com.iskhakovayrat.aiweather.city_list.CityListActivity;
+import com.iskhakovayrat.aiweather.data.AppDatabase;
 import com.iskhakovayrat.aiweather.model.ThreeHoursForecastResponse;
 
 public class MainActivity extends AppCompatActivity implements MainView {
@@ -125,9 +128,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 new Intent(this, CityListActivity.class),
                 GET_CITYID_REQUEST_CODE));
 
-        presenter = new MainPresenter(this);
-        presenter.attach(this, cityId);
+        presenter = new MainPresenter(this, AppDatabase.getInstance(this), new Gson(),
+                getSharedPreferences("lastCity", MODE_PRIVATE));
+        presenter.attach(this);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.detach();
+        super.onDestroy();
     }
 
     @Override
@@ -217,5 +227,45 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void showMainClouds(String clouds) {
         mainClouds.setText(clouds);
+    }
+
+    @Override
+    public void clearData() {
+        mainCityNameAndTemp.setText(null);
+        mainWeather.setText(null);
+        mainIcon.setImageDrawable(null);
+
+        mainThreeHoursForecast.setAdapter(null);
+
+        mainForecastNameDayOne.setText(null);
+        mainForecastIconDayOne.setImageDrawable(null);
+        mainForecastTempMinDayOne.setText(null);
+        mainForecastTempMaxDayOne.setText(null);
+
+        mainForecastNameDayTwo.setText(null);
+        mainForecastIconDayTwo.setImageDrawable(null);
+        mainForecastTempMinDayTwo.setText(null);
+        mainForecastTempMaxDayTwo.setText(null);
+
+        mainForecastNameDayThree.setText(null);
+        mainForecastIconDayThree.setImageDrawable(null);
+        mainForecastTempMinDayThree.setText(null);
+        mainForecastTempMaxDayThree.setText(null);
+
+        mainForecastNameDayFour.setText(null);
+        mainForecastIconDayFour.setImageDrawable(null);
+        mainForecastTempMinDayFour.setText(null);
+        mainForecastTempMaxDayFour.setText(null);
+
+        mainForecastNameDayFive.setText(null);
+        mainForecastIconDayFive.setImageDrawable(null);
+        mainForecastTempMinDayFive.setText(null);
+        mainForecastTempMaxDayFive.setText(null);
+
+        mainDescription.setText(null);
+        mainPressure.setText(null);
+        mainHumidity.setText(null);
+        mainWind.setText(null);
+        mainClouds.setText(null);
     }
 }

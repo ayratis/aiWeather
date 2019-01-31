@@ -66,7 +66,7 @@
 
         <ImageView
             android:id="@+id/mainForecastIconDayOne"
-            android:layout_width="100dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:scaleType="fitStart" />
 
@@ -104,7 +104,7 @@
 
         <ImageView
             android:id="@+id/mainForecastIconDayTwo"
-            android:layout_width="100dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:scaleType="fitStart" />
 
@@ -142,7 +142,7 @@
 
         <ImageView
             android:id="@+id/mainForecastIconDayThree"
-            android:layout_width="100dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:scaleType="fitStart" />
 
@@ -180,7 +180,7 @@
 
         <ImageView
             android:id="@+id/mainForecastIconDayFour"
-            android:layout_width="100dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:scaleType="fitStart" />
 
@@ -218,7 +218,7 @@
 
         <ImageView
             android:id="@+id/mainForecastIconDayFive"
-            android:layout_width="100dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:scaleType="fitStart" />
 

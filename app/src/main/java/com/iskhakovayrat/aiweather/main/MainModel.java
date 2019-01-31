@@ -1,10 +1,16 @@
 package com.iskhakovayrat.aiweather.main;
 
+import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
 import com.iskhakovayrat.aiweather.Api;
+import com.iskhakovayrat.aiweather.ConstantInterface;
+import com.iskhakovayrat.aiweather.data.AppDatabase;
+import com.iskhakovayrat.aiweather.data.CityData;
 import com.iskhakovayrat.aiweather.model.CurrentWeatherResponse;
+import com.iskhakovayrat.aiweather.model.DailyForecastParams;
 import com.iskhakovayrat.aiweather.model.ThreeHoursForecastListItem;
 import com.iskhakovayrat.aiweather.model.ThreeHoursForecastResponse;
-import com.iskhakovayrat.aiweather.model.DailyForecastParams;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,11 +27,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainModel {
 
+    private static final String KEY_LAST_CITY_ID = "keyLastCityId";
+
     private OkHttpClient okHttpClient;
     private Retrofit retrofit;
     private Api api;
+    private AppDatabase db;
+    private Gson gson;
+    private SharedPreferences prefs;
 
-    public MainModel() {
+    public MainModel(AppDatabase db, Gson gson, SharedPreferences prefs) {
+        this.db = db;
+        this.gson = gson;
+        this.prefs = prefs;
         okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new HttpLoggingInterceptor()
                         .setLevel(HttpLoggingInterceptor.Level.BASIC))
@@ -43,12 +57,20 @@ public class MainModel {
 
     public Observable<CurrentWeatherResponse> loadCurrentWeather(int cityId) {
         return api.loadCurrentWeather(cityId, Api.APPID)
+                .map(currentWeatherResponse -> {
+                    saveCurrentWeather(currentWeatherResponse);
+                    return currentWeatherResponse;
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<ThreeHoursForecastResponse> loadThreeHoursForecast(int cityId) {
         return api.loadThreeHoursForecast(cityId, Api.APPID)
+                .map(threeHoursForecastResponse -> {
+                    saveForecastWeather(threeHoursForecastResponse);
+                    return threeHoursForecastResponse;
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -92,8 +114,8 @@ public class MainModel {
 
         String weatherIcon;
 
-        if(weatherIconList.isEmpty()){
-            weatherIcon = items.get(end-1).getWeather().get(0).getIcon();   //if we don't have fifth day's d-icon
+        if (weatherIconList.isEmpty()) {
+            weatherIcon = items.get(end - 1).getWeather().get(0).getIcon();   //if we don't have fifth day's d-icon
         } else {
             weatherIcon = getFrequentWeatherIcon(weatherIconList);
         }
@@ -105,8 +127,8 @@ public class MainModel {
 
     private int getNextDayPosition(List<ThreeHoursForecastListItem> items) {
         for (int i = 1; i < items.size(); i++) {
-            if (!items.get(i).getDtTxt().substring(8,10)
-                    .equals(items.get(i - 1).getDtTxt().substring(8,10))) {
+            if (!items.get(i).getDtTxt().substring(8, 10)
+                    .equals(items.get(i - 1).getDtTxt().substring(8, 10))) {
                 return i;
             }
         }
@@ -141,5 +163,51 @@ public class MainModel {
         return frequentElement;
     }
 
+    public int getLastCityId() {
+        return prefs.getInt(KEY_LAST_CITY_ID, ConstantInterface.KAZAN_ID);
+    }
+
+    public void saveLastCityId(int cityId) {
+        prefs.edit().putInt(KEY_LAST_CITY_ID, cityId).apply();
+    }
+
+    public CurrentWeatherResponse getCashedCurrentWeather() {
+        CityData cityData = db.cityDataDao().findByCityId(getLastCityId());
+        return cityData != null && cityData.currentWeather != null ?
+                gson.fromJson(cityData.currentWeather, CurrentWeatherResponse.class) : null;
+
+    }
+
+    public ThreeHoursForecastResponse getCashedForecastWeather() {
+        CityData cityData = db.cityDataDao().findByCityId(getLastCityId());
+        return cityData != null && cityData.forecastWeather != null ?
+                gson.fromJson(cityData.forecastWeather, ThreeHoursForecastResponse.class) : null;
+    }
+
+    private void saveCurrentWeather(CurrentWeatherResponse currentWeatherResponse) {
+        CityData cityData = db.cityDataDao().findByCityId(currentWeatherResponse.getId());
+        if (cityData != null) {
+            cityData.currentWeather = gson.toJson(currentWeatherResponse);
+        } else {
+            cityData = new CityData();
+            cityData.cityId = currentWeatherResponse.getId();
+            cityData.cityName = currentWeatherResponse.getName();
+            cityData.currentWeather = gson.toJson(currentWeatherResponse);
+        }
+        db.cityDataDao().insertAll(cityData);
+    }
+
+    private void saveForecastWeather(ThreeHoursForecastResponse threeHoursForecastResponse) {
+        CityData cityData = db.cityDataDao().findByCityId(threeHoursForecastResponse.getCity().getId());
+        if (cityData != null) {
+            cityData.forecastWeather = gson.toJson(threeHoursForecastResponse);
+        } else {
+            cityData = new CityData();
+            cityData.cityId = threeHoursForecastResponse.getCity().getId();
+            cityData.cityName = threeHoursForecastResponse.getCity().getName();
+            cityData.forecastWeather = gson.toJson(threeHoursForecastResponse);
+        }
+        db.cityDataDao().insertAll(cityData);
+    }
 
 }

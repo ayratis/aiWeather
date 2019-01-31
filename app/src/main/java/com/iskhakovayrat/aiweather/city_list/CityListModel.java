@@ -1,5 +1,6 @@
 package com.iskhakovayrat.aiweather.city_list;
 
+import com.google.gson.Gson;
 import com.iskhakovayrat.aiweather.Api;
 import com.iskhakovayrat.aiweather.ConstantInterface;
 import com.iskhakovayrat.aiweather.data.AppDatabase;
@@ -7,6 +8,7 @@ import com.iskhakovayrat.aiweather.data.CityData;
 import com.iskhakovayrat.aiweather.model.CurrentWeatherResponse;
 import com.iskhakovayrat.aiweather.model.GroupWeatherResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -26,10 +28,11 @@ public class CityListModel {
     private OkHttpClient okHttpClient;
     private Retrofit retrofit;
     private Api api;
+    private Gson gson;
 
-    public CityListModel(AppDatabase db) {
+    public CityListModel(AppDatabase db, Gson gson) {
         this.db = db;
-
+        this.gson = gson;
         okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new HttpLoggingInterceptor()
                         .setLevel(HttpLoggingInterceptor.Level.BASIC))
@@ -80,12 +83,17 @@ public class CityListModel {
 
     public Observable<GroupWeatherResponse> loadGroupWeatherInfo(String ids) {
         return api.loadCurrentWeatherGroup(ids, Api.APPID)
+                .map(groupWeatherResponse -> {
+                    saveGroupWeatherData(groupWeatherResponse);
+                    return groupWeatherResponse;
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<CurrentWeatherResponse> loadCurrentWeatherInfo(String cityName) {
         return api.loadCurrentWeatherByCityName(cityName, Api.APPID)
+                .map(currentWeatherResponse -> currentWeatherResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -99,17 +107,52 @@ public class CityListModel {
         return i;
     }
 
-    public void insertInDb(int id, String name){
-        CityData cityData = new CityData();
-        cityData.cityId = id;
-        cityData.cityName = name;
+    public void saveCurrentWeatherData(CurrentWeatherResponse currentWeatherResponse){
+        CityData cityData = db.cityDataDao().findByCityId(currentWeatherResponse.getId());
+        if (cityData != null) {
+            cityData.currentWeather = gson.toJson(currentWeatherResponse);
+        } else {
+            cityData = new CityData();
+            cityData.cityId = currentWeatherResponse.getId();
+            cityData.cityName = currentWeatherResponse.getName();
+            cityData.currentWeather = gson.toJson(currentWeatherResponse);
+        }
         db.cityDataDao().insertAll(cityData);
     }
 
     public void deleteFromDb(int id){
         CityData cityData = db.cityDataDao().findByCityId(id);
         db.cityDataDao().delete(cityData);
-
     }
+
+    private void saveGroupWeatherData(GroupWeatherResponse groupWeatherResponse){
+        List<CurrentWeatherResponse> currentWeatherResponseList =
+                groupWeatherResponse.getCurrentWeatherResponseList();
+        for(CurrentWeatherResponse item: currentWeatherResponseList){
+            CityData cityData = db.cityDataDao().findByCityId(item.getId());
+            if(cityData != null){
+                cityData.currentWeather = gson.toJson(item);
+            } else {
+                cityData = new CityData();
+                cityData.cityId = item.getId();
+                cityData.cityName = item.getName();
+                cityData.currentWeather = gson.toJson(item);
+            }
+            db.cityDataDao().insertAll(cityData);
+        }
+    }
+
+    public List<CurrentWeatherResponse> getCashedGroupWeatherData(){
+        List<CityData> cityDataList = db.cityDataDao().getAll();
+        List<CurrentWeatherResponse> currentWeatherResponseList = new ArrayList<>();
+        for(CityData cityData: cityDataList){
+            if(cityData.currentWeather != null) {
+                currentWeatherResponseList
+                        .add(gson.fromJson(cityData.currentWeather, CurrentWeatherResponse.class));
+            }
+        }
+        return currentWeatherResponseList;
+    }
+
 
 }

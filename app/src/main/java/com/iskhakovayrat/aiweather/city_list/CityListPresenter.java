@@ -1,5 +1,6 @@
 package com.iskhakovayrat.aiweather.city_list;
 
+import com.google.gson.Gson;
 import com.iskhakovayrat.aiweather.data.AppDatabase;
 import com.iskhakovayrat.aiweather.model.CurrentWeatherResponse;
 
@@ -12,15 +13,20 @@ public class CityListPresenter {
 
     private CompositeDisposable disposables;
 
-    public CityListPresenter(AppDatabase db) {
-        model = new CityListModel(db);
+    public CityListPresenter(AppDatabase db, Gson gson) {
+        model = new CityListModel(db, gson);
     }
 
     public void attach(CityListView view) {
         this.view = view;
         model.checkForMoscowKazan();
         disposables = new CompositeDisposable();
+        showCashedGroupWeatherInfo();
         loadGroupWeatherInfo(model.getIds());
+    }
+
+    private void showCashedGroupWeatherInfo() {
+        view.showListInfo(model.getCashedGroupWeatherData());
     }
 
     public void detach() {
@@ -49,8 +55,7 @@ public class CityListPresenter {
         } else if (model.getDbItemcount() >= 20) {
             view.showToastTooMuch();
         } else {
-            model.insertInDb(currentWeatherResponse.getId(),
-                    currentWeatherResponse.getName());
+            model.saveCurrentWeatherData(currentWeatherResponse);
             view.addListItem(currentWeatherResponse);
         }
     }

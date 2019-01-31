@@ -1,6 +1,5 @@
 package com.iskhakovayrat.aiweather.city_list;
 
-import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -10,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.iskhakovayrat.aiweather.R;
 import com.iskhakovayrat.aiweather.data.AppDatabase;
 import com.iskhakovayrat.aiweather.model.CurrentWeatherResponse;
@@ -37,10 +37,7 @@ public class CityListActivity extends AppCompatActivity
         cityListAddButton = findViewById(R.id.cityListAddCityListButton);
 
 
-        presenter = new CityListPresenter(Room
-                .databaseBuilder(getApplicationContext(), AppDatabase.class, "city_database")
-                .allowMainThreadQueries()
-                .build());
+        presenter = new CityListPresenter(AppDatabase.getInstance(this), new Gson());
         presenter.attach(this);
 
         cityListAddButton.setOnClickListener(v -> {

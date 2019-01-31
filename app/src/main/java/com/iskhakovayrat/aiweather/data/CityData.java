@@ -14,4 +14,9 @@ public class CityData {
     @ColumnInfo
     public String cityName;
 
+    @ColumnInfo
+    public String currentWeather;
+
+    @ColumnInfo
+    public String forecastWeather;
 }
