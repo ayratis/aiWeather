@@ -1,7 +1,5 @@
 package com.iskhakovayrat.aiweather.city_list;
 
-import com.google.gson.Gson;
-import com.iskhakovayrat.aiweather.data.AppDatabase;
 import com.iskhakovayrat.aiweather.model.CurrentWeatherResponse;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -13,8 +11,8 @@ public class CityListPresenter {
 
     private CompositeDisposable disposables;
 
-    public CityListPresenter(AppDatabase db, Gson gson) {
-        model = new CityListModel(db, gson);
+    public CityListPresenter(CityListModel cityListModel) {
+        model = cityListModel;
     }
 
     public void attach(CityListView view) {

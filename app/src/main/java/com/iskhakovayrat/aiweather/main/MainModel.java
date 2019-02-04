@@ -36,23 +36,11 @@ public class MainModel {
     private Gson gson;
     private SharedPreferences prefs;
 
-    public MainModel(AppDatabase db, Gson gson, SharedPreferences prefs) {
+    public MainModel(AppDatabase db, Gson gson, SharedPreferences prefs, Api api) {
         this.db = db;
         this.gson = gson;
         this.prefs = prefs;
-        okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor()
-                        .setLevel(HttpLoggingInterceptor.Level.BASIC))
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(Api.BASE_URL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        api = retrofit.create(Api.class);
+        this.api = api;
     }
 
     public Observable<CurrentWeatherResponse> loadCurrentWeather(int cityId) {

@@ -27,8 +27,8 @@ public class MainPresenter {
 
     private CompositeDisposable disposables;
 
-    public MainPresenter(Context context, AppDatabase db, Gson gson, SharedPreferences prefs) {
-        model = new MainModel(db, gson, prefs);
+    public MainPresenter(Context context, MainModel mainModel) {
+        model = mainModel;
         this.context = context;
         disposables = new CompositeDisposable();
     }

@@ -25,27 +25,13 @@ public class CityListModel {
 
     private AppDatabase db;
 
-    private OkHttpClient okHttpClient;
-    private Retrofit retrofit;
     private Api api;
     private Gson gson;
 
-    public CityListModel(AppDatabase db, Gson gson) {
+    public CityListModel(AppDatabase db, Gson gson, Api api) {
         this.db = db;
         this.gson = gson;
-        okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor()
-                        .setLevel(HttpLoggingInterceptor.Level.BASIC))
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(Api.BASE_URL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        api = retrofit.create(Api.class);
+        this.api = api;
     }
 
     public String getIds() {
@@ -121,7 +107,8 @@ public class CityListModel {
     }
 
     public void deleteFromDb(int id){
-        CityData cityData = db.cityDataDao().findByCityId(id);
+        CityData cityData = new CityData();
+        cityData.cityId = id;
         db.cityDataDao().delete(cityData);
     }
 

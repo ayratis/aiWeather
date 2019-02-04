@@ -10,11 +10,18 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.iskhakovayrat.aiweather.Api;
 import com.iskhakovayrat.aiweather.R;
 import com.iskhakovayrat.aiweather.data.AppDatabase;
 import com.iskhakovayrat.aiweather.model.CurrentWeatherResponse;
 
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CityListActivity extends AppCompatActivity
@@ -36,8 +43,20 @@ public class CityListActivity extends AppCompatActivity
 
         cityListAddButton = findViewById(R.id.cityListAddCityListButton);
 
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new HttpLoggingInterceptor()
+                        .setLevel(HttpLoggingInterceptor.Level.BASIC))
+                .build();
 
-        presenter = new CityListPresenter(AppDatabase.getInstance(this), new Gson());
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(Api.BASE_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Api api = retrofit.create(Api.class);
+        presenter = new CityListPresenter(new CityListModel(AppDatabase.getInstance(this), new Gson(), api));
         presenter.attach(this);
 
         cityListAddButton.setOnClickListener(v -> {

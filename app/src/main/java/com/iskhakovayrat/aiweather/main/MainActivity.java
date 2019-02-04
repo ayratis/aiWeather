@@ -1,7 +1,6 @@
 package com.iskhakovayrat.aiweather.main;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,11 +11,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.iskhakovayrat.aiweather.Api;
 import com.iskhakovayrat.aiweather.ConstantInterface;
 import com.iskhakovayrat.aiweather.R;
 import com.iskhakovayrat.aiweather.city_list.CityListActivity;
 import com.iskhakovayrat.aiweather.data.AppDatabase;
 import com.iskhakovayrat.aiweather.model.ThreeHoursForecastResponse;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
@@ -128,8 +134,22 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 new Intent(this, CityListActivity.class),
                 GET_CITYID_REQUEST_CODE));
 
-        presenter = new MainPresenter(this, AppDatabase.getInstance(this), new Gson(),
-                getSharedPreferences("lastCity", MODE_PRIVATE));
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new HttpLoggingInterceptor()
+                        .setLevel(HttpLoggingInterceptor.Level.BASIC))
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(Api.BASE_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Api api = retrofit.create(Api.class);
+
+        presenter = new MainPresenter(this, new MainModel(AppDatabase.getInstance(this),
+                new Gson(), getSharedPreferences("lastCity", MODE_PRIVATE), api));
         presenter.attach(this);
 
     }
